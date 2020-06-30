@@ -9,16 +9,14 @@ function App() {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        setUser(user)
-      }
+      user && setUser(user)
     })
-  }, [user])
+  }, [])
 
   return (
     <div className="App">
       <Authentication user={user} setUser={setUser} />
-      あなたのユーザーIDは {user.uid ? user.uid : 'まだない'} です。
+      あなたのユーザーIDは {user.uid || 'まだない'} です。
     </div>
   )
 }
@@ -44,8 +42,11 @@ function Authentication(props) {
       .catch(error => {
         console.log(error.code)
         console.log(error.message)
+        alert(
+          'ログアウトに失敗しました。ログインから時間が経っている場合は、再度ログインしてからログアウトしてください。'
+        )
       })
-    props.setUser({ uid: null, isAnonymous: false })
+    props.setUser({})
   }
 
   return (
